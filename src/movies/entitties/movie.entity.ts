@@ -1,6 +1,16 @@
+import { IsNumber, IsOptional, IsString } from 'class-validator';
+
 export class Movie {
+  @IsNumber()
   id: number;
-  name: string;
-  year: number;
-  genre: string[];
+
+  @IsString()
+  name?: string;
+
+  @IsNumber()
+  year?: number;
+
+  @IsOptional()
+  @IsString({ each: true })
+  genre?: string[];
 }

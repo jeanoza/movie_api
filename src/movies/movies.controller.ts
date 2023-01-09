@@ -8,12 +8,20 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { MoviesService } from './movies.service';
+import { Movie } from './entitties/movie.entity';
+import { CreateMovieDto } from './dto/create-movie.dto';
 
 @Controller('movies')
 export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
   @Get()
-  getAll() {
-    return 'Movie';
+  getAll(): Movie[] {
+    return this.moviesService.getAll();
+  }
+  @Post()
+  create(@Body() data: CreateMovieDto) {
+    return this.moviesService.create(data);
   }
 
   @Get('search')
@@ -22,22 +30,17 @@ export class MoviesController {
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string) {
-    return `movie ${id}`;
-  }
-
-  @Post()
-  create(@Body() data) {
-    return 'create movie' + JSON.stringify(data);
+  getOne(@Param('id') id: number) {
+    return this.moviesService.getOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `remove movie - ${id}`;
+  remove(@Param('id') id: number) {
+    return this.moviesService.deleteOne(id);
   }
 
   @Patch(':id') //FIXME: put and patch diff - patch(all), put(part of ...)
-  update(@Param('id') id: string, @Body() data) {
-    return { id, ...data };
+  patch(@Param('id') id: number, @Body() data: CreateMovieDto) {
+    return this.moviesService.update(id, data);
   }
 }
